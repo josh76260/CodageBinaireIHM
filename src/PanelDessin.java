@@ -4,159 +4,206 @@ import java.util.ArrayList;
 
 public class PanelDessin extends JPanel {
 
-    private String code, mode;
+    private final String trame;
+    private final String mode;
 
-    public PanelDessin(String mode, String code) {
-        this.code = code;
+    /**
+     * Constructeur de la classe PanelDessin
+     *
+     * @param mode  mode de dessin de la trame
+     * @param trame la trame à dessiner
+     */
+    public PanelDessin(String mode, String trame) {
+        this.trame = trame;
         this.mode = mode;
         setVisible(true);
     }
 
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-    }
-
+    /**
+     * Surcharge de la méthode {@link JPanel::paintComponent}
+     *
+     * @param g le contexte graphique du panel
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        Font f = g2.getFont();
+        Font f = g2.getFont(); // Sauvrgarde de la police afin de la réinitialiser ensuite
 
         g2.setColor(Color.black);
-        int uniteX = getWidth() / (code.length() + 1);
-        int uniteY = getHeight() / 4;
+
+        // Calcul des valeurs de référence pour faire les dessins en fonction de la taille de la fenêtre
+        int posX = getWidth() / (trame.length() + 1);
+        int posY = getHeight() / 4;
+
+        // Dessin du quadrillage
         for (int i = 1; i < 4; i++) {
-            g2.drawLine(50, uniteY * i, getWidth() - 50, uniteY * i);
+            g2.drawLine(50, posY * i, getWidth() - 50, posY * i);
         }
-        for (int i = 1; i < code.length() + 1; i++) {
-            g2.drawLine(uniteX * i, 50, uniteX * i, getHeight() - 50);
+        for (int i = 1; i < trame.length() + 1; i++) {
+            g2.drawLine(posX * i, 50, posX * i, getHeight() - 50);
         }
 
+        // Dessin des unités sur le côté gauche
         g2.setFont(new Font("C", Font.PLAIN, 22));
-        g2.drawString(" n V", uniteX / 3, uniteY);
-        g2.drawString(" 0 V", uniteX / 3, uniteY * 2);
-        g2.drawString("-n V", uniteX / 3, uniteY * 3);
+        g2.drawString(" n V", posX / 3, posY);
+        g2.drawString(" 0 V", posX / 3, posY * 2);
+        g2.drawString("-n V", posX / 3, posY * 3);
 
-        if (!code.trim().equals(""))
-            dessinerGraph(g2, uniteX, uniteY);
+        // Dessine le graphique
+        if (!trame.trim().equals(""))
+            dessinerGraph(g2, posX, posY);
 
+        // Rétablit la police de base
         g2.setFont(f);
     }
 
-    private void dessinerGraph(Graphics2D g2, int uniteX, int uniteY) {
+    /**
+     * Dessine le graphique en fonction de la taille de la fenêtre
+     *
+     * @param g2     le contexte graphique du panel
+     * @param posX position x de référence pour le dessin du graphique
+     * @param posY position y de référence pour le dessin du graphique
+     */
+    private void dessinerGraph(Graphics2D g2, int posX, int posY) {
         ArrayList<Point> lPoint = new ArrayList<>();
         char previous = Character.MIN_VALUE;
         boolean estEnHaut = false;
         Stroke s = g2.getStroke();
 
-        for (int i = 0; i < code.length(); i++) {
-            g2.drawString(code.charAt(i) + "", uniteX * (i + 2) - uniteX / 2, uniteY / 2);
+        // Dessine la trame au-dessus du graphique de sorte que la représentation d'un bit soit en dessous de celui-ci
+        for (int i = 0; i < trame.length(); i++) {
+            g2.drawString(trame.charAt(i) + "", posX * (i + 2) - posX / 2, posY / 2);
         }
 
+        // Cahngement de couleur et la grosseur du trait pour que le graphique soit bien visible
         g2.setColor(Color.BLUE);
         g2.setStroke(new BasicStroke(5));
 
+        // Dessin du graph en fonction du mode passé à la construction
         switch (mode) {
             case "NR":
-                for (int i = 0; i < code.length(); i++) {
-                    char c = code.charAt(i);
-                    if (previous != c && i != 0) {
-                        ajouterHautVersBas(uniteX, uniteY, lPoint, i);
+                for (int i = 0; i < trame.length(); i++) {
+                    char bit = trame.charAt(i);
+
+                    // Si le précedent est différent et que c'est pas le premier bit
+                    if (previous != bit && i != 0) {
+                        transitionHautVersBas(posX, posY, lPoint, i); // On ajoute une transition de haut vers bas
                     }
-                    if (c == '1') {
-                        ajouterTraitHorizontal(uniteX, uniteY, lPoint, i);
+
+                    // Si le bit est à 1
+                    if (bit == '1') {
+                        ajouterTraitHorizontal(posX, posY, lPoint, i); // On ajoute en haut
                     } else {
-                        ajouterTraitHorizontal(uniteX, uniteY * 3, lPoint, i);
+                        ajouterTraitHorizontal(posX, posY * 3, lPoint, i); // On ajoute en bas
                     }
-                    previous = c;
+                    previous = bit;
                 }
                 break;
 
+            // Idem que le cas "NI" mais en inversant les cas pou 0 et 1
             case "NI":
-                for (int i = 0; i < code.length(); i++) {
-                    char c = code.charAt(i);
-                    if (previous != c && i != 0) {
-                        ajouterHautVersBas(uniteX, uniteY, lPoint, i);
+                for (int i = 0; i < trame.length(); i++) {
+                    char bit = trame.charAt(i);
+                    if (previous != bit && i != 0) {
+                        transitionHautVersBas(posX, posY, lPoint, i);
                     }
-                    if (c == '0') {
-                        ajouterTraitHorizontal(uniteX, uniteY, lPoint, i);
+                    if (bit == '0') {
+                        ajouterTraitHorizontal(posX, posY, lPoint, i);
                     } else {
-                        ajouterTraitHorizontal(uniteX, uniteY * 3, lPoint, i);
+                        ajouterTraitHorizontal(posX, posY * 3, lPoint, i);
                     }
-                    previous = c;
+                    previous = bit;
                 }
                 break;
+
             case "MA":
-                for (int i = 0; i < code.length(); i++) {
-                    char c = code.charAt(i);
-                    if (previous == c && i != 0) {
-                        ajouterHautVersBas(uniteX, uniteY, lPoint, i);
+                for (int i = 0; i < trame.length(); i++) {
+                    char bit = trame.charAt(i);
+
+                    // Si il y a deux bits identiques qui se suivent et qu'on est pas sur le premier bit
+                    if (previous == bit && i != 0) {
+                        transitionHautVersBas(posX, posY, lPoint, i);
                     }
-                    if (c == '1') {
-                        transitionDemiTempshautVersBas(uniteX, uniteY, lPoint, i);
+
+                    // Si le bit est à 1, on effectue une transition sur un demi temps d'horloge
+                    if (bit == '1') {
+                        // On ajoute une transition vers le bas sur un demi temps d'horloge
+                        transitionDemiTempsHautVersBas(posX, posY, lPoint, i);
                     } else {
-                        transitionDemiTempsBasVersHaut(uniteX, uniteY, lPoint, i);
+                        // On ajoute une transition vers le haut sur un demi temps d'horloge
+                        transitionDemiTempsBasVersHaut(posX, posY, lPoint, i);
                     }
-                    previous = c;
+                    previous = bit;
                 }
                 break;
 
             case "MD":
-                for (int i = 0; i < code.length(); i++) {
-                    char c = code.charAt(i);
-                    if (c == '0' && i != 0) {
+                for (int i = 0; i < trame.length(); i++) {
+                    char bit = trame.charAt(i);
+
+                    // Si le bit est à 0 et que ce n'est pas le premier
+                    if (bit == '0' && i != 0) {
+
+                        // Si le dernier point ajouté était en haut
                         if (estEnHaut) {
-                            ajouterHautVersBas(uniteX, uniteY, lPoint, i);
+                            transitionHautVersBas(posX, posY, lPoint, i);
                             estEnHaut = false;
                         } else {
-                            lPoint.add(new Point(uniteX * (i + 1), uniteY * 3));
-                            lPoint.add(new Point(uniteX * (i + 1), uniteY));
+                            transitionBasVersHaut(posX, posY, lPoint, i);
                             estEnHaut = true;
                         }
                     }
+
+                    // Si le dernier point ajouté était en haut
                     if (estEnHaut) {
-                        transitionDemiTempshautVersBas(uniteX, uniteY, lPoint, i);
+                        transitionDemiTempsHautVersBas(posX, posY, lPoint, i);
                         estEnHaut = false;
                     } else {
-                        transitionDemiTempsBasVersHaut(uniteX, uniteY, lPoint, i);
+                        transitionDemiTempsBasVersHaut(posX, posY, lPoint, i);
                         estEnHaut = true;
                     }
                 }
                 break;
 
             case "MI":
-                for (int i = 0; i < code.length(); i++) {
-                    char c = code.charAt(i);
-                    if (c == '0' && previous == '0') {
+                for (int i = 0; i < trame.length(); i++) {
+                    char bit = trame.charAt(i);
+
+                    // Si 2 bits à 0 se suivent
+                    if (bit == '0' && previous == '0') {
+
+                        // Si le dernier point ajouté était en haut
                         if (estEnHaut) {
-                            ajouterHautVersBas(uniteX, uniteY, lPoint, i);
+                            transitionHautVersBas(posX, posY, lPoint, i);
                             estEnHaut = false;
                         } else {
-                            lPoint.add(new Point(uniteX * (i + 1), uniteY * 3));
-                            lPoint.add(new Point(uniteX * (i + 1), uniteY));
+                            transitionBasVersHaut(posX, posY, lPoint, i);
                             estEnHaut = true;
                         }
                     }
+
+                    // Si le dernier point ajouté était en haut
                     if (estEnHaut) {
-                        if (c == '0') {
-                            ajouterTraitHorizontal(uniteX, uniteY, lPoint, i);
+
+                        // Si le bit est à 0
+                        if (bit == '0') {
+                            ajouterTraitHorizontal(posX, posY, lPoint, i);
                         } else {
-                            transitionDemiTempshautVersBas(uniteX, uniteY, lPoint, i);
+                            transitionDemiTempsHautVersBas(posX, posY, lPoint, i);
                             estEnHaut = false;
                         }
-
-
                     } else {
-                        if (c == '0') {
-                            ajouterTraitHorizontal(uniteX, uniteY * 3, lPoint, i);
+
+                        // Si le bit est à 0
+                        if (bit == '0') {
+                            ajouterTraitHorizontal(posX, posY * 3, lPoint, i);
                         } else {
-                            transitionDemiTempsBasVersHaut(uniteX, uniteY, lPoint, i);
+                            transitionDemiTempsBasVersHaut(posX, posY, lPoint, i);
                             estEnHaut = true;
                         }
-
                     }
-                    previous = c;
+                    previous = bit;
                 }
                 break;
 
@@ -164,52 +211,110 @@ public class PanelDessin extends JPanel {
                 break;
         }
 
+        // Dessin du graphique point par point
         Point prev = lPoint.remove(0);
         for (Point p : lPoint) {
             g2.drawLine(prev.getX(), prev.getY(), p.getX(), p.getY());
             prev = p;
         }
 
+        // Rétablissement des attributs par défaut de g2
         g2.setStroke(s);
     }
 
-    private void transitionDemiTempsBasVersHaut(int uniteX, int uniteY, ArrayList<Point> lPoint, int i) {
-        lPoint.add(new Point(uniteX * (i + 1), uniteY * 3));
-        lPoint.add(new Point(uniteX * (i + 2) - uniteX / 2, uniteY * 3));
-        lPoint.add(new Point(uniteX * (i + 2) - uniteX / 2, uniteY));
-        lPoint.add(new Point(uniteX * (i + 2), uniteY));
+    /**
+     * Ajoute les points nécessaires pour faire une transition du bas vers le haut
+     * @param posX la position x de départ
+     * @param posY la position y de départ
+     * @param lPoint la liste de points dans laquelle ou va ajouter les nouveaux
+     * @param i la position dans la trame qui va permettre de placer correctement nos points
+     */
+    private void transitionBasVersHaut(int posX, int posY, ArrayList<Point> lPoint, int i) {
+        lPoint.add(new Point(posX * (i + 1), posY * 3));
+        lPoint.add(new Point(posX * (i + 1), posY));
     }
 
-    private void transitionDemiTempshautVersBas(int uniteX, int uniteY, ArrayList<Point> lPoint, int i) {
-        lPoint.add(new Point(uniteX * (i + 1), uniteY));
-        lPoint.add(new Point(uniteX * (i + 2) - uniteX / 2, uniteY));
-        lPoint.add(new Point(uniteX * (i + 2) - uniteX / 2, uniteY * 3));
-        lPoint.add(new Point(uniteX * (i + 2), uniteY * 3));
+    /**
+     * Ajoute les points nécessaires pour faire une transition sur un demi temps d'horloge du bas vers le haut
+     * @param posX la position x de départ
+     * @param posY la position y de départ
+     * @param lPoint la liste de points dans laquelle ou va ajouter les nouveaux
+     * @param i la position dans la trame qui va permettre de placer correctement nos points
+     */
+    private void transitionDemiTempsBasVersHaut(int posX, int posY, ArrayList<Point> lPoint, int i) {
+        lPoint.add(new Point(posX * (i + 1), posY * 3));
+        lPoint.add(new Point(posX * (i + 2) - posX / 2, posY * 3));
+        lPoint.add(new Point(posX * (i + 2) - posX / 2, posY));
+        lPoint.add(new Point(posX * (i + 2), posY));
     }
 
-    private void ajouterTraitHorizontal(int uniteX, int uniteY, ArrayList<Point> lPoint, int i) {
-        lPoint.add(new Point(uniteX * (i + 1), uniteY));
-        lPoint.add(new Point(uniteX * (i + 2), uniteY));
+    /**
+     * Ajoute les points nécessaires pour faire une transition du haut vers le bas
+     * @param posX la position x de départ
+     * @param posY la position y de départ
+     * @param lPoint la liste de points dans laquelle ou va ajouter les nouveaux
+     * @param i la position dans la trame qui va permettre de placer correctement nos points
+     */
+    private void transitionDemiTempsHautVersBas(int posX, int posY, ArrayList<Point> lPoint, int i) {
+        lPoint.add(new Point(posX * (i + 1), posY));
+        lPoint.add(new Point(posX * (i + 2) - posX / 2, posY));
+        lPoint.add(new Point(posX * (i + 2) - posX / 2, posY * 3));
+        lPoint.add(new Point(posX * (i + 2), posY * 3));
     }
 
-    private void ajouterHautVersBas(int uniteX, int uniteY, ArrayList<Point> lPoint, int i) {
-        lPoint.add(new Point(uniteX * (i + 1), uniteY));
-        lPoint.add(new Point(uniteX * (i + 1), uniteY * 3));
+    /**
+     * Ajoute les points nécessaires pour faire un trait horizontal
+     * @param posX la position x de départ
+     * @param posY la position y de départ
+     * @param lPoint la liste de points dans laquelle ou va ajouter les nouveaux
+     * @param i la position dans la trame qui va permettre de placer correctement nos points
+     */
+    private void ajouterTraitHorizontal(int posX, int posY, ArrayList<Point> lPoint, int i) {
+        lPoint.add(new Point(posX * (i + 1), posY));
+        lPoint.add(new Point(posX * (i + 2), posY));
     }
 
+    /**
+     * Ajoute les points nécessaires pour faire une transition du haut vers le bas
+     * @param posX la position x de départ
+     * @param posY la position y de départ
+     * @param lPoint la liste de points dans laquelle ou va ajouter les nouveaux
+     * @param i la position dans la trame qui va permettre de placer correctement nos points
+     */
+    private void transitionHautVersBas(int posX, int posY, ArrayList<Point> lPoint, int i) {
+        lPoint.add(new Point(posX * (i + 1), posY));
+        lPoint.add(new Point(posX * (i + 1), posY * 3));
+    }
+
+    /**
+     * Classe privéé représentant les points de notre graphique
+     */
     private static class Point {
         int x;
         int y;
 
+        /**
+         * Contructeur de la classe Point
+         * @param x position x du point
+         * @param y position y du point
+         */
         Point(int x, int y) {
             this.x = x;
             this.y = y;
         }
 
+        /**
+         * Accesseur sur la position x du point
+         * @return la position x du point
+         */
         public int getX() {
             return x;
         }
 
+        /**
+         * Accesseur sur la position y du point
+         * @return la position y du point
+         */
         public int getY() {
             return y;
         }
