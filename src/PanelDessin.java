@@ -62,15 +62,12 @@ public class PanelDessin extends JPanel {
                 for (int i = 0; i < code.length(); i++) {
                     char c = code.charAt(i);
                     if (previous != c && i != 0) {
-                        lPoint.add(new Point(uniteX * (i + 1), uniteY));
-                        lPoint.add(new Point(uniteX * (i + 1), uniteY * 3));
+                        ajouterHautVersBas(uniteX, uniteY, lPoint, i);
                     }
                     if (c == '1') {
-                        lPoint.add(new Point(uniteX * (i + 1), uniteY));
-                        lPoint.add(new Point(uniteX * (i + 2), uniteY));
+                        ajouterTraitHorizontal(uniteX, uniteY, lPoint, i);
                     } else {
-                        lPoint.add(new Point(uniteX * (i + 1), uniteY * 3));
-                        lPoint.add(new Point(uniteX * (i + 2), uniteY * 3));
+                        ajouterTraitHorizontal(uniteX, uniteY * 3, lPoint, i);
                     }
                     previous = c;
                 }
@@ -80,15 +77,12 @@ public class PanelDessin extends JPanel {
                 for (int i = 0; i < code.length(); i++) {
                     char c = code.charAt(i);
                     if (previous != c && i != 0) {
-                        lPoint.add(new Point(uniteX * (i + 1), uniteY));
-                        lPoint.add(new Point(uniteX * (i + 1), uniteY * 3));
+                        ajouterHautVersBas(uniteX, uniteY, lPoint, i);
                     }
                     if (c == '0') {
-                        lPoint.add(new Point(uniteX * (i + 1), uniteY));
-                        lPoint.add(new Point(uniteX * (i + 2), uniteY));
+                        ajouterTraitHorizontal(uniteX, uniteY, lPoint, i);
                     } else {
-                        lPoint.add(new Point(uniteX * (i + 1), uniteY * 3));
-                        lPoint.add(new Point(uniteX * (i + 2), uniteY * 3));
+                        ajouterTraitHorizontal(uniteX, uniteY * 3, lPoint, i);
                     }
                     previous = c;
                 }
@@ -97,19 +91,12 @@ public class PanelDessin extends JPanel {
                 for (int i = 0; i < code.length(); i++) {
                     char c = code.charAt(i);
                     if (previous == c && i != 0) {
-                        lPoint.add(new Point(uniteX * (i + 1), uniteY));
-                        lPoint.add(new Point(uniteX * (i + 1), uniteY * 3));
+                        ajouterHautVersBas(uniteX, uniteY, lPoint, i);
                     }
                     if (c == '1') {
-                        lPoint.add(new Point(uniteX * (i + 1), uniteY));
-                        lPoint.add(new Point(uniteX * (i + 2) - uniteX / 2, uniteY));
-                        lPoint.add(new Point(uniteX * (i + 2) - uniteX / 2, uniteY * 3));
-                        lPoint.add(new Point(uniteX * (i + 2), uniteY * 3));
+                        transitionDemiTempshautVersBas(uniteX, uniteY, lPoint, i);
                     } else {
-                        lPoint.add(new Point(uniteX * (i + 1), uniteY * 3));
-                        lPoint.add(new Point(uniteX * (i + 2) - uniteX / 2, uniteY * 3));
-                        lPoint.add(new Point(uniteX * (i + 2) - uniteX / 2, uniteY));
-                        lPoint.add(new Point(uniteX * (i + 2), uniteY));
+                        transitionDemiTempsBasVersHaut(uniteX, uniteY, lPoint, i);
                     }
                     previous = c;
                 }
@@ -120,8 +107,7 @@ public class PanelDessin extends JPanel {
                     char c = code.charAt(i);
                     if (c == '0' && i != 0) {
                         if (estEnHaut) {
-                            lPoint.add(new Point(uniteX * (i + 1), uniteY));
-                            lPoint.add(new Point(uniteX * (i + 1), uniteY * 3));
+                            ajouterHautVersBas(uniteX, uniteY, lPoint, i);
                             estEnHaut = false;
                         } else {
                             lPoint.add(new Point(uniteX * (i + 1), uniteY * 3));
@@ -130,16 +116,10 @@ public class PanelDessin extends JPanel {
                         }
                     }
                     if (estEnHaut) {
-                        lPoint.add(new Point(uniteX * (i + 1), uniteY));
-                        lPoint.add(new Point(uniteX * (i + 2) - uniteX / 2, uniteY));
-                        lPoint.add(new Point(uniteX * (i + 2) - uniteX / 2, uniteY * 3));
-                        lPoint.add(new Point(uniteX * (i + 2), uniteY * 3));
+                        transitionDemiTempshautVersBas(uniteX, uniteY, lPoint, i);
                         estEnHaut = false;
                     } else {
-                        lPoint.add(new Point(uniteX * (i + 1), uniteY * 3));
-                        lPoint.add(new Point(uniteX * (i + 2) - uniteX / 2, uniteY * 3));
-                        lPoint.add(new Point(uniteX * (i + 2) - uniteX / 2, uniteY));
-                        lPoint.add(new Point(uniteX * (i + 2), uniteY));
+                        transitionDemiTempsBasVersHaut(uniteX, uniteY, lPoint, i);
                         estEnHaut = true;
                     }
                 }
@@ -150,8 +130,7 @@ public class PanelDessin extends JPanel {
                     char c = code.charAt(i);
                     if (c == '0' && previous == '0') {
                         if (estEnHaut) {
-                            lPoint.add(new Point(uniteX * (i + 1), uniteY));
-                            lPoint.add(new Point(uniteX * (i + 1), uniteY * 3));
+                            ajouterHautVersBas(uniteX, uniteY, lPoint, i);
                             estEnHaut = false;
                         } else {
                             lPoint.add(new Point(uniteX * (i + 1), uniteY * 3));
@@ -161,26 +140,18 @@ public class PanelDessin extends JPanel {
                     }
                     if (estEnHaut) {
                         if (c == '0') {
-                            lPoint.add(new Point(uniteX * (i + 1), uniteY));
-                            lPoint.add(new Point(uniteX * (i + 2), uniteY));
+                            ajouterTraitHorizontal(uniteX, uniteY, lPoint, i);
                         } else {
-                            lPoint.add(new Point(uniteX * (i + 1), uniteY));
-                            lPoint.add(new Point(uniteX * (i + 2) - uniteX / 2, uniteY));
-                            lPoint.add(new Point(uniteX * (i + 2) - uniteX / 2, uniteY * 3));
-                            lPoint.add(new Point(uniteX * (i + 2), uniteY * 3));
+                            transitionDemiTempshautVersBas(uniteX, uniteY, lPoint, i);
                             estEnHaut = false;
                         }
 
 
                     } else {
                         if (c == '0') {
-                            lPoint.add(new Point(uniteX * (i + 1), uniteY * 3));
-                            lPoint.add(new Point(uniteX * (i + 2), uniteY * 3));
+                            ajouterTraitHorizontal(uniteX, uniteY * 3, lPoint, i);
                         } else {
-                            lPoint.add(new Point(uniteX * (i + 1), uniteY * 3));
-                            lPoint.add(new Point(uniteX * (i + 2) - uniteX / 2, uniteY * 3));
-                            lPoint.add(new Point(uniteX * (i + 2) - uniteX / 2, uniteY));
-                            lPoint.add(new Point(uniteX * (i + 2), uniteY));
+                            transitionDemiTempsBasVersHaut(uniteX, uniteY, lPoint, i);
                             estEnHaut = true;
                         }
 
@@ -200,6 +171,30 @@ public class PanelDessin extends JPanel {
         }
 
         g2.setStroke(s);
+    }
+
+    private void transitionDemiTempsBasVersHaut(int uniteX, int uniteY, ArrayList<Point> lPoint, int i) {
+        lPoint.add(new Point(uniteX * (i + 1), uniteY * 3));
+        lPoint.add(new Point(uniteX * (i + 2) - uniteX / 2, uniteY * 3));
+        lPoint.add(new Point(uniteX * (i + 2) - uniteX / 2, uniteY));
+        lPoint.add(new Point(uniteX * (i + 2), uniteY));
+    }
+
+    private void transitionDemiTempshautVersBas(int uniteX, int uniteY, ArrayList<Point> lPoint, int i) {
+        lPoint.add(new Point(uniteX * (i + 1), uniteY));
+        lPoint.add(new Point(uniteX * (i + 2) - uniteX / 2, uniteY));
+        lPoint.add(new Point(uniteX * (i + 2) - uniteX / 2, uniteY * 3));
+        lPoint.add(new Point(uniteX * (i + 2), uniteY * 3));
+    }
+
+    private void ajouterTraitHorizontal(int uniteX, int uniteY, ArrayList<Point> lPoint, int i) {
+        lPoint.add(new Point(uniteX * (i + 1), uniteY));
+        lPoint.add(new Point(uniteX * (i + 2), uniteY));
+    }
+
+    private void ajouterHautVersBas(int uniteX, int uniteY, ArrayList<Point> lPoint, int i) {
+        lPoint.add(new Point(uniteX * (i + 1), uniteY));
+        lPoint.add(new Point(uniteX * (i + 1), uniteY * 3));
     }
 
     private static class Point {
