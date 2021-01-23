@@ -34,7 +34,7 @@ public class CodageBinaire extends JFrame implements KeyListener {
     private final JRadioButton manchButton;
 
     /**
-     * Bouton déclenchant le dessin de la trame avec la méthode Manchester différentielle
+     * Bouton déclenchant le dessin de la trame avec la méthode Manchester différentiel
      */
     private final JRadioButton manchDiffButton;
 
@@ -101,6 +101,7 @@ public class CodageBinaire extends JFrame implements KeyListener {
         // Création de la zone de texte pour la saisie de la trame
         codeAffiche = new JTextField(20);
         codeAffiche.addKeyListener(this);
+        codeAffiche.setToolTipText("Vous pouvez taper sur ENTRÉE pour valider");
         panelSaisie.add(codeAffiche);
 
         // Crétion d'une bordure autour du panel
