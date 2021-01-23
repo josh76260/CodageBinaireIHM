@@ -13,14 +13,39 @@ import java.awt.event.KeyListener;
 
 public class CodageBinaire extends JFrame implements KeyListener {
 
+    /**
+     * Le panel sur lequel sera dessiné le graphique
+     */
     private PanelDessin dessin;
 
+    /**
+     * Bouton déclenchant le dessin de la trame avec la méthode NRZ
+     */
     private final JRadioButton nrzButton;
+
+    /**
+     * Bouton déclenchant le dessin de la trame avec la méthode NRZI
+     */
     private final JRadioButton nrziButton;
+
+    /**
+     * Bouton déclenchant le dessin de la trame avec la méthode Manchester
+     */
     private final JRadioButton manchButton;
+
+    /**
+     * Bouton déclenchant le dessin de la trame avec la méthode Manchester différentielle
+     */
     private final JRadioButton manchDiffButton;
+
+    /**
+     * Bouton déclenchant le dessin de la trame avec la méthode Miller
+     */
     private final JRadioButton millerButton;
 
+    /**
+     * La zone de texte dans laquelle la trame sera saisie
+     */
     private final JTextField codeAffiche;
 
     /**

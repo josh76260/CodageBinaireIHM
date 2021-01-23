@@ -2,15 +2,28 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * Classe permettant de dessiner le graphique correspondant à notre trame binaire
+ *
+ * @author Joshua Galien
+ */
+
 public class PanelDessin extends JPanel {
 
+    /**
+     * Trame binaire qui va être desinnée
+     */
     private final String trame;
+
+    /**
+     * Méthode avec laquelle la trame sera desinnée
+     */
     private final String mode;
 
     /**
      * Constructeur de la classe PanelDessin
      *
-     * @param mode  mode de dessin de la trame
+     * @param mode mode de dessin de la trame
      * @param trame la trame à dessiner
      */
     public PanelDessin(String mode, String trame) {
@@ -20,8 +33,8 @@ public class PanelDessin extends JPanel {
     }
 
     /**
-     * Surcharge de la méthode {@link JPanel::paintComponent}
-     *
+     * Surcharge de la méthode {@link javax.swing.JPanel#paintComponent(Graphics)}
+     * 
      * @param g le contexte graphique du panel
      */
     @Override
@@ -61,7 +74,7 @@ public class PanelDessin extends JPanel {
     /**
      * Dessine le graphique en fonction de la taille de la fenêtre
      *
-     * @param g2     le contexte graphique du panel
+     * @param g2 le contexte graphique du panel
      * @param posX position x de référence pour le dessin du graphique
      * @param posY position y de référence pour le dessin du graphique
      */
@@ -287,10 +300,18 @@ public class PanelDessin extends JPanel {
     }
 
     /**
-     * Classe privéé représentant les points de notre graphique
+     * Classe privée représentant les points de notre graphique
      */
     private static class Point {
+
+        /**
+         * Coordonnée x du point
+         */
         int x;
+
+        /**
+         * Coordonnée y du point
+         */
         int y;
 
         /**
