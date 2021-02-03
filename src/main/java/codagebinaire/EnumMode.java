@@ -2,6 +2,9 @@ package codagebinaire;
 
 import java.util.ArrayList;
 
+/**
+ * Type énuméré qui représente le mode de dessin de la trame sur notre panel.
+ */
 public enum EnumMode {
   /**
    * Constante représentant le mode de dessin NRZ.
