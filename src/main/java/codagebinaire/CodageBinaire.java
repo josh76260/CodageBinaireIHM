@@ -60,6 +60,9 @@ public class CodageBinaire extends JFrame implements KeyListener {
      */
     private JTextField codeAffiche;
 
+    /**
+     * Mode de dessin définit via une enum
+     */
     private EnumMode mode;
 
     /**

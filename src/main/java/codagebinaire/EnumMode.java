@@ -3,7 +3,19 @@ package codagebinaire;
 import java.util.ArrayList;
 
 public enum EnumMode {
+    /**
+     * Constante représentant le mode de dessin NRZ
+     */
     NRZ("NRZ") {
+        /**
+         * Surcharge de la méthode abstraite de dessin
+         * @param posX position x de référence
+         * @param posY position x de référence
+         * @param lPoint la liste de points qui va servir au dessin
+         * @param trame la trame à dessiner
+         * @param panel le panel sur lequel on va dessiner
+         */
+        @Override
         public void dessiner(int posX, int posY, ArrayList<PanelDessin.Point> lPoint, String trame, PanelDessin panel) {
             char previous = Character.MIN_VALUE;
             for (int i = 0; i < trame.length(); i++) {
@@ -23,7 +35,21 @@ public enum EnumMode {
                 previous = bit;
             }
         }
-    }, NRZI("NRZI") {
+    },
+
+    /**
+     * Constante représentant le mode de dessin NRZI
+     */
+    NRZI("NRZI") {
+        /**
+         * Surcharge de la méthode abstraite de dessin
+         * @param posX position x de référence
+         * @param posY position x de référence
+         * @param lPoint la liste de points qui va servir au dessin
+         * @param trame la trame à dessiner
+         * @param panel le panel sur lequel on va dessiner
+         */
+        @Override
         public void dessiner(int posX, int posY, ArrayList<PanelDessin.Point> lPoint, String trame, PanelDessin panel) {
             char previous = Character.MIN_VALUE;
             for (int i = 0; i < trame.length(); i++) {
@@ -39,7 +65,21 @@ public enum EnumMode {
                 previous = bit;
             }
         }
-    }, MAN("Manchester") {
+    },
+
+    /**
+     * Constante représentant la méthode de dessin Manchester
+     */
+    MAN("Manchester") {
+        /**
+         * Surcharge de la méthode abstraite de dessin
+         * @param posX position x de référence
+         * @param posY position x de référence
+         * @param lPoint la liste de points qui va servir au dessin
+         * @param trame la trame à dessiner
+         * @param panel le panel sur lequel on va dessiner
+         */
+        @Override
         public void dessiner(int posX, int posY, ArrayList<PanelDessin.Point> lPoint, String trame, PanelDessin panel) {
             char previous = Character.MIN_VALUE;
             for (int i = 0; i < trame.length(); i++) {
@@ -61,7 +101,21 @@ public enum EnumMode {
                 previous = bit;
             }
         }
-    }, MANDIFF("Manchester différentiel") {
+    },
+
+    /**
+     * Constante représentant la méthode de dessin Manchester différentiel
+     */
+    MANDIFF("Manchester différentiel") {
+        /**
+         * Surcharge de la méthode abstraite de dessin
+         * @param posX position x de référence
+         * @param posY position x de référence
+         * @param lPoint la liste de points qui va servir au dessin
+         * @param trame la trame à dessiner
+         * @param panel le panel sur lequel on va dessiner
+         */
+        @Override
         public void dessiner(int posX, int posY, ArrayList<PanelDessin.Point> lPoint, String trame, PanelDessin panel) {
             boolean estEnHaut = false;
             for (int i = 0; i < trame.length(); i++) {
@@ -90,7 +144,21 @@ public enum EnumMode {
                 }
             }
         }
-    }, MILLER("Miller") {
+    },
+
+    /**
+     * Constante représentant la méthode de dessin Miller
+     */
+    MILLER("Miller") {
+        /**
+         * Surcharge de la méthode abstraite de dessin
+         * @param posX position x de référence
+         * @param posY position x de référence
+         * @param lPoint la liste de points qui va servir au dessin
+         * @param trame la trame à dessiner
+         * @param panel le panel sur lequel on va dessiner
+         */
+        @Override
         public void dessiner(int posX, int posY, ArrayList<PanelDessin.Point> lPoint, String trame, PanelDessin panel) {
             boolean estEnHaut = false;
             char previous = Character.MIN_VALUE;
@@ -134,6 +202,9 @@ public enum EnumMode {
             }
         }
     },
+    /**
+     * Constante représentant le mode de dessin vide
+     */
     VIDE(""){
         @Override
         public void dessiner(int posX, int posY, ArrayList<PanelDessin.Point> lPoint, String trame, PanelDessin panel) {
@@ -147,8 +218,20 @@ public enum EnumMode {
         this.valeur = valeur;
     }
 
+    /**
+     * Méthode abstraite pour dessiner
+     * @param posX position x de référence
+     * @param posY position x de référence
+     * @param lPoint la liste de points qui va servir au dessin
+     * @param trame la trame à dessiner
+     * @param panel le panel sur lequel on va dessiner
+     */
     public abstract void dessiner(int posX, int posY, ArrayList<PanelDessin.Point> lPoint, String trame, PanelDessin panel);
 
+    /**
+     * Accesseur sur l'attribut valeur
+     * @return la valeur correspondant au mode
+     */
     public String getValeur() {
         return valeur;
     }
