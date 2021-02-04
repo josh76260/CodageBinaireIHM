@@ -1,8 +1,6 @@
 package codagebinaire;
 
 import java.awt.BorderLayout;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
@@ -20,7 +18,7 @@ import javax.swing.border.TitledBorder;
  * @author Joshua Galien
  */
 
-public class CodageBinaire extends JFrame implements KeyListener {
+public class CodageBinaire extends JFrame {
 
   /**
    * Le panel sur lequel sera dessiné le graphique.
@@ -179,8 +177,9 @@ public class CodageBinaire extends JFrame implements KeyListener {
 
     // Création de la zone de texte pour la saisie de la trame
     codeAffiche = new JTextField(20);
-    codeAffiche.addKeyListener(this);
-    codeAffiche.setToolTipText("Vous pouvez taper sur ENTRÉE pour valider");
+    codeAffiche.addKeyListener(new EcouteurClavier(this));
+    codeAffiche.setToolTipText("Caractères acceptés : 0 ou 1. "
+            + "Vous pouvez taper sur ENTRÉE pour valider.");
     panelSaisie.add(codeAffiche);
 
     // Crétion d'une bordure autour du panel
@@ -202,7 +201,7 @@ public class CodageBinaire extends JFrame implements KeyListener {
    * Fonction qui est en charge d'appeler le constructeur de PanelDessin
    * avec les bons paramètres.
    */
-  private void dessiner() {
+  protected void dessiner() {
     if (!codeAffiche.getText().equals("")) {
       String code = codeAffiche.getText();
 
@@ -217,35 +216,6 @@ public class CodageBinaire extends JFrame implements KeyListener {
     // Changement du titre de la fenêtre principale
     setTitle("Représentation de la trame " + codeAffiche.getText()
             + " avec la méthode : " + mode.getValeur());
-  }
-
-  /**
-   * Méthode d'écoute sur les évènements liés au clavier.
-   *
-   * @param e l'évènement clavier
-   */
-  @Override
-  public void keyTyped(KeyEvent e) {
-    // Test si c'est la source est la touche entrée
-    if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-      dessiner();
-    } else {
-      // Traitement de l'évènement : si c'est autre chose que 0 ou 1
-      // on remplace par un caractère vide
-      if (e.getKeyChar() != '0' && e.getKeyChar() != '1') {
-        e.setKeyChar(Character.MIN_VALUE);
-      }
-    }
-  }
-
-  @Override
-  public void keyPressed(KeyEvent e) {
-
-  }
-
-  @Override
-  public void keyReleased(KeyEvent e) {
-
   }
 
   /**
